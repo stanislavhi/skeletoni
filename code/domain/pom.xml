@@ -6,7 +6,9 @@
     <groupId>turbo.diesel</groupId>
     <artifactId>skeletoni</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
+
   <artifactId>domain</artifactId>
   <name>domain</name>
   <description>Domain module</description>

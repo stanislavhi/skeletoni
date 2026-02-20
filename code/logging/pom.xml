@@ -6,7 +6,9 @@
     <groupId>turbo.diesel</groupId>
     <artifactId>skeletoni</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
+
   <artifactId>logging</artifactId>
   <name>logging</name>
   <description>Logging module</description>
