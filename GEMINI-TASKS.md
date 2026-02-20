@@ -9,6 +9,7 @@ The goal was to refactor the existing monolithic Spring Boot project into a mult
 3. **Configure Maven POMs**: Update the root `pom.xml` to be a parent project. Create `pom.xml` for `code` and all sub-modules. Define dependency management in the root or `code` POM.
 4. **Migrate Source Code**: Move the main application class, resources, and tests to the `application` module.
 5. **Setup Dependencies**: `application` module depends on all other modules to glue the app together. `infrastructure` contains the heavy dependencies (Spring Data, Kafka, etc.). `contract` and `domain` remain relatively lightweight.
+6. **Add Boot and Resilience Modules**: Create `boot` for startup configuration and `resilience` for circuit breaker patterns.
 
 ---
 
@@ -25,13 +26,17 @@ The goal was to refactor the existing monolithic Spring Boot project into a mult
     - [x] `infrastructure`
     - [x] `logging`
     - [x] `observability`
+    - [x] `boot`
+    - [x] `resilience`
 
 - [x] **Updated Root POM**: Converted root `pom.xml` to packaging `pom` and added `code` as a module.
 
 - [x] **Configured Module POMs**:
     - [x] `code/pom.xml`: Defined modules and common dependencies (Lombok).
     - [x] `application/pom.xml`: Added dependencies on sibling modules and `spring-boot-starter-web`.
-    - [x] `infrastructure/pom.xml`: Moved Spring Cloud, Kafka, MongoDB, and Postgres dependencies here.
+    - [x] `infrastructure/pom.xml`: Moved Spring Cloud, Kafka, MongoDB, and Postgres dependencies here. Removed Resilience4j.
+    - [x] `resilience/pom.xml`: Added `spring-cloud-starter-circuitbreaker-resilience4j`.
+    - [x] `boot/pom.xml`: Added dependencies on `application`, `resilience`, and `spring-boot-starter`.
     - [x] `contract/pom.xml`: Created basic POM.
     - [x] `domain/pom.xml`: Created basic POM.
     - [x] `logging/pom.xml`: Created basic POM.
@@ -52,7 +57,7 @@ The goal was to refactor the existing monolithic Spring Boot project into a mult
 
 - [ ] **Add missing plugin configuration**: Parent POM may need `maven-compiler-plugin` (Java 21 source/target), `maven-surefire-plugin`, `maven-failsafe-plugin`, `protobuf-maven-plugin`, and `sonar-maven-plugin` entries. Claude flagged this for review.
 
-- [ ] **Expand `infrastructure/pom.xml`**: Add remaining dependencies — MongoDB, Couchbase, RabbitMQ, Resilience4j, MapStruct, gRPC, Micrometer, Testcontainers.
+- [ ] **Expand `infrastructure/pom.xml`**: Add remaining dependencies — MongoDB, Couchbase, RabbitMQ, MapStruct, gRPC, Micrometer, Testcontainers.
 
 - [ ] **Expand `contract/pom.xml`**: Add `protobuf-java`, `grpc-stub`, `grpc-protobuf`, and SpringDoc OpenAPI dependencies.
 
@@ -64,11 +69,13 @@ The goal was to refactor the existing monolithic Spring Boot project into a mult
 
 ## Decisions & Notes
 
-- **`code` wrapper module**: A dedicated `code/` container module was introduced to cleanly separate the six functional source modules from root-level project files (CI config, Docker, documentation). This is a standard Maven pattern for larger multi-module projects.
+- **`code` wrapper module**: A dedicated `code/` container module was introduced to cleanly separate the functional source modules from root-level project files.
 
-- **Lombok in `code/pom.xml`**: Lombok was placed at the `code` parent level so all sub-modules inherit it without repeating the dependency. `annotationProcessorPaths` must also be configured in the compiler plugin for MapStruct + Lombok to coexist correctly.
+- **Lombok in `code/pom.xml`**: Lombok was placed at the `code` parent level so all sub-modules inherit it without repeating the dependency.
 
-- **Original `src/` not deleted**: The old monolithic `src/` directory was not removed due to tool permission constraints. A human must delete it manually before the build will be clean. This is the only known pending item requiring human action.
+- **Boot Module**: Created a dedicated `boot` module to house the `SpringBootApplication` entry point and configuration, separating startup logic from business logic.
+
+- **Resilience Module**: Isolated `resilience4j` dependencies into a `resilience` module to enforce clear boundaries for fault tolerance patterns.
 
 ---
 
@@ -84,6 +91,8 @@ The goal was to refactor the existing monolithic Spring Boot project into a mult
 | `code/infrastructure/pom.xml` | Created | Infrastructure module POM with DB/broker deps |
 | `code/logging/pom.xml` | Created | Logging module POM |
 | `code/observability/pom.xml` | Created | Observability module POM |
+| `code/boot/pom.xml` | Created | Boot module POM |
+| `code/resilience/pom.xml` | Created | Resilience module POM |
 | `code/application/src/main/java/.../SkeletoniApplication.java` | Moved | Migrated from root `src/` to application module |
 | `code/application/src/main/resources/application.yml` | Moved | Migrated from root `src/` to application module |
 | `code/application/src/test/java/.../SkeletoniApplicationTests.java` | Moved | Migrated from root `src/` to application module |
