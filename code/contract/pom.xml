@@ -6,9 +6,7 @@
     <groupId>turbo.diesel</groupId>
     <artifactId>skeletoni</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
-
   <artifactId>contract</artifactId>
   <name>contract</name>
   <description>Contract module</description>
@@ -18,6 +16,11 @@
       <groupId>turbo.diesel</groupId>
       <artifactId>domain</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.8.5</version>
     </dependency>
   </dependencies>
 </project>

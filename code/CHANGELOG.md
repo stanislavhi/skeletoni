@@ -14,3 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Migrated `SkeletoniApplication.java` and `application.yml` to `code/boot`.
     - Configured `pom.xml` files for all modules with appropriate dependencies.
     - Centralized dependency management and build configuration in `code/pom.xml`.
+    - Configured MapStruct with Lombok binding.
+    - Added Testcontainers to `infrastructure` for integration testing.
+    - Added SpringDoc OpenAPI to `contract` for API documentation.
+    - Added Actuator and Prometheus to `observability` for metrics.
+    - Added Logstash encoder to `logging` for structured logging.

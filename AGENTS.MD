@@ -101,9 +101,9 @@ Never commit credentials, tokens, or passwords. Use `application-local.yml` (git
 | `code/pom.xml` | Gemini | ✅ Done | Container module POM |
 | All sub-module `pom.xml` files | Gemini | ✅ Done | contract, application, domain, infrastructure, logging, observability |
 | Project directory scaffolding | Gemini | ✅ Done | All module directories and base layout |
-| `SkeletoniApplication.java` | Gemini | ✅ Done | Migrated to `code/application/src/main/java/turbo/diesel/skeletoni/` |
-| `application.yml` | Gemini | ✅ Done | Migrated to `code/application/src/main/resources/` |
-| `SkeletoniApplicationTests.java` | Gemini | ✅ Done | Migrated to `code/application/src/test/` |
+| `SkeletoniApplication.java` | Gemini | ✅ Done | Migrated to `code/boot/src/main/java/turbo/diesel/skeletoni/` |
+| `application.yml` | Gemini | ✅ Done | Migrated to `code/boot/src/main/resources/` |
+| `SkeletoniApplicationTests.java` | Gemini | ✅ Done | Migrated to `code/boot/src/test/` |
 | `README.md` | Claude | ✅ Done | Full architecture docs, tech stack, module guide |
 | `AGENTS.md` | Claude | ✅ Done | This file |
 | `claude-tasks.md` | Claude | ✅ Done | Claude's action log |

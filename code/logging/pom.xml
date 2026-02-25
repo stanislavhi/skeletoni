@@ -6,10 +6,16 @@
     <groupId>turbo.diesel</groupId>
     <artifactId>skeletoni</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
-
   <artifactId>logging</artifactId>
   <name>logging</name>
   <description>Logging module</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+      <version>8.0</version>
+    </dependency>
+  </dependencies>
 </project>
