@@ -81,6 +81,16 @@ This document explains the architectural decisions (the "Why's") behind **skelet
 - **Cause:** Some "Native" variants of gRPC starters are not always available or correctly indexed in Maven Central for all architectures.
 - **Fix:** Use the stable version: `3.1.0.RELEASE`.
 
+### 11. Kafka Connectivity in Docker Compose
+- **Error:** `kafka-ui` or other containers cannot connect to Kafka, or they report `localhost:9092` connectivity issues even when using the `kafka` service name.
+- **Cause:** Kafka advertised listeners are misconfigured. If Kafka advertises only `localhost:9092`, other containers will try to connect to their own local loopback.
+- **Fix:** Configure multiple listeners in `compose.yml`: one for the host (`PLAINTEXT_HOST://localhost:9092`) and one for the internal Docker network (`PLAINTEXT://kafka:29092`).
+
+### 12. Bitnami Kafka Image Resolution
+- **Error:** `Error failed to resolve reference "docker.io/bitnami/kafka:3.9": not found`
+- **Cause:** Bitnami's tagging convention for Kafka can sometimes be inconsistent or unavailable on certain registries for specific major versions without a patch number.
+- **Fix:** Switched to the official `apache/kafka` image which provides more predictable tag resolution for standard versions like `3.9.0`.
+
 ---
 
 ## 🛠️ Troubleshooting Commands
