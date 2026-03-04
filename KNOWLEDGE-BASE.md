@@ -91,6 +91,16 @@ This document explains the architectural decisions (the "Why's") behind **skelet
 - **Cause:** Bitnami's tagging convention for Kafka can sometimes be inconsistent or unavailable on certain registries for specific major versions without a patch number.
 - **Fix:** Switched to the official `apache/kafka` image which provides more predictable tag resolution for standard versions like `3.9.0`.
 
+### 13. Schema validation: missing table [examples]
+- **Error:** `org.hibernate.tool.schema.spi.SchemaManagementException: Schema validation: missing table [examples]`
+- **Cause:** Hibernate's `ddl-auto: validate` is checking for the table before it has been created, or Flyway has not run because the dependency was missing or misconfigured.
+- **Fix:** Ensure `flyway-core` and the database-specific Flyway module (e.g., `flyway-database-postgresql`) are present in the `infrastructure` module's dependencies. Flyway will automatically run migrations in `src/main/resources/db/migration` before Hibernate validates the schema. If you still encounter this in tests, ensure the `test` profile is using a compatible database (H2/Postgres) and that the migration path is correctly scanned.
+
+### 14. Flyway 10 Resolution Errors (Solved via Fallback)
+- **Error:** `[ERROR] dependency: org.flywaydb:flyway-database-h2:jar:x.y.z was not found`
+- **Cause:** Flyway 10 introduced a modular architecture where database-specific code is in separate artifacts. These modular artifacts are sometimes missing or mis-indexed in certain Maven mirrors (like the Confluent mirror used for Avro).
+- **Fix:** Fell back to **Flyway 9.22.3**. In version 9.x, all database support (including PostgreSQL and H2) is bundled within the `flyway-core` JAR. This "fat jar" approach is much more resilient to mirror synchronization issues and is recommended for this skeleton to ensure build stability.
+
 ---
 
 ## 🛠️ Troubleshooting Commands

@@ -120,6 +120,32 @@ Never commit credentials, tokens, or passwords. Use `application-local.yml` (git
 
 ---
 
+## Known Pitfalls for Agents
+
+When contributing to this repository, agents should be aware of these common technical hurdles discovered during the initial scaffolding:
+
+### 1. Module Boundaries & Transitive Deps
+- **Pitfall**: Assuming test dependencies (like H2) are transitive from `infrastructure` to `boot`.
+- **Solution**: Explicitly add test-scoped drivers to the `boot` module's `pom.xml` if needed for `contextLoads` tests.
+
+### 2. MapStruct Imports
+- **Pitfall**: MapStruct failing to resolve domain value objects in custom `expression` strings.
+- **Solution**: Use the `imports` attribute in the `@Mapper` annotation to explicitly import domain classes used in Java expressions.
+
+### 3. Flyway & Hibernate Race Conditions
+- **Pitfall**: Hibernate validation failing with "missing table" because it runs before Flyway migrations.
+- **Solution**: Ensure `flyway-core` and the database-specific Flyway module are correctly added to the `infrastructure` module. Hibernate's `ddl-auto: validate` is set to trigger after Flyway initialization in the current configuration.
+
+### 4. Placeholder Resolution
+- **Pitfall**: Application context failing to load in tests because mandatory environment placeholders (like `SPRING_DATA_COUCHBASE_BUCKET_NAME`) are not resolved.
+- **Solution**: Always provide dummy values for these placeholders in `application-test.yml`, even if the specific auto-configuration is excluded.
+
+### 5. Dependency Stability
+- **Pitfall**: Using `.Native` versions of gRPC or niche Flyway versions that aren't consistently available in Maven Central.
+- **Solution**: Rely on versions managed by the Spring Boot Parent BOM wherever possible. For non-managed dependencies, stick to stable `.RELEASE` or widely used patch versions.
+
+---
+
 ## Tasks File Format
 
 Every agent must maintain a `{MODEL-NAME}-TASKS.md` file at the **project root**. Use this exact structure:

@@ -31,6 +31,10 @@ I am Antigravity, an expert coding assistant. My goal is to continue the develop
 - [x] **Skeleton Classes**: Implemented example domain model, application services/ports/controllers, and infrastructure persistence adapters with MapStruct.
 - [x] **Logging**: Added `logback-spring.xml` with Logstash support.
 - [x] **Verification**: Successfully compiled the project, verified the application starts with the `local` profile, and confirmed the `docker compose` stack is fully operational with working Kafka connectivity.
+- [x] **Documentation**: Created `KNOWLEDGE-BASE.md`, updated `README.md`, `CONTRIBUTING.md`, `LICENSE`, `CONFIGURATIONS.md`, and merged/restored `code/CHANGELOG.md` to preserve historical refactoring tasks. Added "Known Pitfalls for Agents" to `AGENTS.md`.
+- [x] **Flyway & Schema Registry**: Added missing Flyway dependencies to fix Hibernate validation errors. Added Confluent Schema Registry to the `docker compose` stack and configured the application to use it.
+- [x] **Avro Support**: Added Confluent Maven repository, Avro dependencies, and `avro-maven-plugin` for messaging contract generation.
+- [x] **Test Fixes**: Resolved `IllegalStateException` and `Cannot load driver class: org.h2.Driver` in `SkeletoniApplicationTests` by adding H2 to the `boot` module and providing mandatory configuration placeholders in `application-test.yml`. Implemented Flyway 9.22.3 fallback to ensure definitive build stability across Maven mirrors.
 
 ## Tasks Pending
 
