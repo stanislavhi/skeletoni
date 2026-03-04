@@ -30,3 +30,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         - Added Logstash encoder to `logging` for structured logging.
         - Comprehensive `KNOWLEDGE-BASE.md` and `CONTRIBUTING.md`.
         - Unit tests for application context loading using H2 test profile.
+        - Applied SonarQube best practices by replacing `Stream.collect(Collectors.toList())` with `Stream.toList()`.

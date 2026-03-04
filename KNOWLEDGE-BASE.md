@@ -101,6 +101,16 @@ This document explains the architectural decisions (the "Why's") behind **skelet
 - **Cause:** Flyway 10 introduced a modular architecture where database-specific code is in separate artifacts. These modular artifacts are sometimes missing or mis-indexed in certain Maven mirrors (like the Confluent mirror used for Avro).
 - **Fix:** Fell back to **Flyway 9.22.3**. In version 9.x, all database support (including PostgreSQL and H2) is bundled within the `flyway-core` JAR. This "fat jar" approach is much more resilient to mirror synchronization issues and is recommended for this skeleton to ensure build stability.
 
+### 15. SonarQube: usage of 'Stream.collect(Collectors.toList())'
+- **Error:** Sonar flags `collect(Collectors.toList())` as a code smell (Rule java:S6204).
+- **Cause:** Since Java 16, `Stream.toList()` is the preferred way to produce an unmodifiable list. It is more concise and prevents accidental modification of the resulting list.
+- **Fix:** Replace `.collect(Collectors.toList())` with `.toList()` and remove the redundant `Collectors` import.
+
+### 16. Schema Registry Connection Failures
+- **Error:** `Connection refused` when connecting to Schema Registry during startup or tests.
+- **Cause:** The application is attempting to reach the Schema Registry before it is fully initialized or using the wrong internal/external URL.
+- **Fix:** Ensure `schema-registry` is included in `compose.yml` and the application's `kafka.properties.schema.registry.url` points to the correct endpoint (usually `http://localhost:8085` for local and `http://schema-registry:8081` for inter-container communication).
+
 ---
 
 ## 🛠️ Troubleshooting Commands

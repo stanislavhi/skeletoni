@@ -144,6 +144,10 @@ When contributing to this repository, agents should be aware of these common tec
 - **Pitfall**: Using `.Native` versions of gRPC or niche Flyway versions that aren't consistently available in Maven Central.
 - **Solution**: Rely on versions managed by the Spring Boot Parent BOM wherever possible. For non-managed dependencies, stick to stable `.RELEASE` or widely used patch versions.
 
+### 6. Modern Java Idioms (Sonar Rules)
+- **Pitfall**: Generating code using older Java patterns (like `collect(Collectors.toList())`) that trigger SonarQube quality gate failures.
+- **Solution**: Always use Java 21 idioms. Specifically, use `Stream.toList()` for collecting streams to unmodifiable lists and prefer `record` for DTOs and value objects.
+
 ---
 
 ## Tasks File Format

@@ -2,7 +2,6 @@ package turbo.diesel.skeletoni.infrastructure.adapter.persistence;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -37,6 +36,6 @@ public class ExamplePostgresAdapter implements ExampleRepository {
   public List<Example> findAll() {
     return repository.findAll().stream()
         .map(mapper::toDomain)
-        .collect(Collectors.toList());
+        .toList();
   }
 }

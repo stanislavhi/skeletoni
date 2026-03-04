@@ -31,6 +31,7 @@ I am Antigravity, an expert coding assistant. My goal is to continue the develop
 - [x] **Skeleton Classes**: Implemented example domain model, application services/ports/controllers, and infrastructure persistence adapters with MapStruct.
 - [x] **Logging**: Added `logback-spring.xml` with Logstash support.
 - [x] **Verification**: Successfully compiled the project, verified the application starts with the `local` profile, and confirmed the `docker compose` stack is fully operational with working Kafka connectivity.
+- [x] **Sonar Refinement**: Replaced `Stream.collect(Collectors.toList())` with `Stream.toList()` across the codebase for improved readability and unmodifiable lists, satisfying SonarQube rules.
 - [x] **Documentation**: Created `KNOWLEDGE-BASE.md`, updated `README.md`, `CONTRIBUTING.md`, `LICENSE`, `CONFIGURATIONS.md`, and merged/restored `code/CHANGELOG.md` to preserve historical refactoring tasks. Added "Known Pitfalls for Agents" to `AGENTS.md`.
 - [x] **Flyway & Schema Registry**: Added missing Flyway dependencies to fix Hibernate validation errors. Added Confluent Schema Registry to the `docker compose` stack and configured the application to use it.
 - [x] **Avro Support**: Added Confluent Maven repository, Avro dependencies, and `avro-maven-plugin` for messaging contract generation.

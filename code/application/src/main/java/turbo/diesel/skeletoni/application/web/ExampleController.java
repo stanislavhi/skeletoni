@@ -1,7 +1,6 @@
 package turbo.diesel.skeletoni.application.web;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,7 +40,7 @@ public class ExampleController {
   public List<ExampleResponse> listExamples() {
     return exampleUseCase.listExamples().stream()
         .map(this::mapToResponse)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private ExampleResponse mapToResponse(Example example) {
