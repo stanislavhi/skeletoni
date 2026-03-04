@@ -30,6 +30,8 @@ The overall strategy is to establish a solid, well-documented skeleton that any 
 
 - [x] **Created gemini-tasks.md**: Transcribed from human-provided content. Reformatted to match the standard tasks file format defined in AGENTS.md.
 
+- [x] **Fixed CI/CD Triggers**: Updated `.github/workflows/ci.yml` to trigger on all branches (`**`) and added a Docker build step.
+
 ---
 
 ## Tasks Pending
@@ -39,8 +41,6 @@ The overall strategy is to establish a solid, well-documented skeleton that any 
 - [ ] **`application.yml`**: Full configuration file with all externalized properties for every integration (DB URLs, Kafka topics, RabbitMQ exchanges, Resilience4j settings, scheduler crons, actuator config, logging format).
 
 - [ ] **`Dockerfile`**: Multi-stage Maven build → minimal JRE 21 runtime image.
-
-- [ ] **`.github/workflows/ci.yml`**: Full CI pipeline — build, unit tests, integration tests (Testcontainers), SonarCloud, Docker build.
 
 - [ ] **`.github/workflows/release.yml`**: Release pipeline — full test suite, Docker push, GitHub Release notes.
 
@@ -80,7 +80,8 @@ The overall strategy is to establish a solid, well-documented skeleton that any 
 
 | File | Action | Reason |
 |---|---|---|
-| `README.md` | Created (v1 → v2) | Project documentation — two iterations as requirements were refined |
+| `README.md` | Created | Project documentation |
 | `AGENTS.md` | Created | AI agent coordination protocol |
-| `claude-tasks.md` | Created | This action log |
-| `gemini-tasks.md` | Created | Transcribed from human-provided Gemini output, reformatted to standard |
+| `claude-tasks.md` | Modified | Updated task list |
+| `gemini-tasks.md` | Created | Transcribed task list |
+| `.github/workflows/ci.yml` | Modified | Fix triggers and add Docker build step |
