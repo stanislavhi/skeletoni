@@ -111,6 +111,11 @@ This document explains the architectural decisions (the "Why's") behind **skelet
 - **Cause:** The application is attempting to reach the Schema Registry before it is fully initialized or using the wrong internal/external URL.
 - **Fix:** Ensure `schema-registry` is included in `compose.yml` and the application's `kafka.properties.schema.registry.url` points to the correct endpoint (usually `http://localhost:8085` for local and `http://schema-registry:8081` for inter-container communication).
 
+### 17. GitHub Actions: Service Initialization Race Conditions
+- **Error:** CI pipeline fails because tests cannot connect to Kafka or Postgres immediately.
+- **Cause:** GitHub Actions services start in the background, and the Maven build might start before the containers are fully "Healthy".
+- **Fix:** The updated `ci.yml` uses the official `apache/kafka` and `confluentinc/cp-schema-registry` images. For complex integration tests, consider using Testcontainers inside the build instead of GitHub Services, or add a "wait-for" script in the workflow steps.
+
 ---
 
 ## 🛠️ Troubleshooting Commands
