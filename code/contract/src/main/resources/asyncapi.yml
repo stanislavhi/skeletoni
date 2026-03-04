@@ -1,0 +1,30 @@
+asyncapi: 3.0.0
+info:
+  title: Skeletoni Async API
+  version: 0.0.1
+  description: Messaging contracts for skeletoni
+
+channels:
+  exampleEvents:
+    address: example-topic
+    messages:
+      exampleCreated:
+        $ref: '#/components/messages/ExampleCreated'
+
+components:
+  messages:
+    ExampleCreated:
+      payload:
+        $ref: '#/components/schemas/ExampleCreatedPayload'
+  schemas:
+    ExampleCreatedPayload:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time

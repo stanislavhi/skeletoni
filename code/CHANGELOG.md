@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - **SKL-1**: Initial project structure refactoring to multi-module Maven project.
     - Created `code` module as the parent for all source modules.
     - Created sub-modules: `contract`, `application`, `domain`, `infrastructure`, `logging`, `observability`, `boot`, `resilience`.

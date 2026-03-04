@@ -72,98 +72,64 @@
 
 ```
 skeletoni/
-├── pom.xml                                    # Parent POM — BOM + plugin management
-│
-├── contract/                                  # Public surface area — all API contracts
-│   ├── pom.xml
-│   ├── src/main/proto/                        # Protobuf definitions for gRPC
-│   ├── src/main/resources/
-│   │   ├── openapi/
-│   │   │   └── openapi.yml                   # OpenAPI 3 REST spec
-│   │   └── asyncapi/
-│   │       └── asyncapi.yml                  # AsyncAPI 3 event/messaging spec
-│   └── src/main/java/.../contract/
-│       ├── rest/                              # REST request/response DTOs
-│       └── event/                            # Published & consumed event schemas
-│
-├── application/                               # Orchestration layer — no framework deps
-│   ├── pom.xml
-│   └── src/main/java/.../application/
-│       ├── command/                           # CQRS write side
-│       │   ├── CreateExampleCommand.java
-│       │   └── CreateExampleCommandHandler.java
-│       ├── query/                             # CQRS read side
-│       │   ├── GetExampleQuery.java
-│       │   └── GetExampleQueryHandler.java
-│       ├── scheduler/                         # @Scheduled jobs (cron externalized)
-│       │   └── ExampleScheduler.java
-│       └── port/                             # Inbound & outbound port interfaces
-│           ├── in/
-│           │   └── ExampleUseCase.java
-│           └── out/
-│               ├── ExampleRepository.java
-│               └── ExampleEventPublisher.java
-│
-├── domain/                                    # Pure business logic — zero deps
-│   ├── pom.xml
-│   └── src/main/java/.../domain/
-│       ├── model/                             # Aggregates, entities, value objects
-│       │   ├── Example.java
-│       │   └── ExampleId.java
-│       ├── event/                             # Domain events
-│       │   └── ExampleCreatedEvent.java
-│       └── service/                          # Domain services
-│           └── ExampleDomainService.java
-│
-├── infrastructure/                            # All framework & I/O adapters
-│   ├── pom.xml
-│   └── src/main/java/.../infrastructure/
-│       ├── postgres/                          # Spring Data JPA + Flyway
-│       │   ├── ExampleJpaEntity.java
-│       │   ├── ExampleJpaRepository.java
-│       │   └── ExamplePostgresAdapter.java
-│       ├── mongodb/                           # Spring Data MongoDB (read models)
-│       │   ├── ExampleDocument.java
-│       │   └── ExampleMongoAdapter.java
-│       ├── couchbase/                         # Spring Data Couchbase
-│       │   ├── ExampleCouchbaseEntity.java
-│       │   └── ExampleCouchbaseAdapter.java
-│       ├── kafka/                             # Kafka producers & consumers
-│       │   ├── ExampleKafkaProducer.java
-│       │   └── ExampleKafkaConsumer.java
-│       ├── rabbitmq/                          # RabbitMQ publishers & listeners
-│       │   ├── ExampleRabbitPublisher.java
-│       │   └── ExampleRabbitListener.java
-│       ├── grpc/                              # gRPC server implementation
-│       │   └── ExampleGrpcService.java
-│       ├── resilience/                        # Resilience4j decorators & config
-│       │   └── ResilienceConfig.java
-│       ├── config/                            # Spring beans & integration config
-│       │   ├── KafkaConfig.java
-│       │   ├── RabbitMQConfig.java
-│       │   ├── MongoConfig.java
-│       │   └── SchedulerConfig.java
-│       └── src/main/resources/
-│           ├── application.yml
-│           ├── application-local.yml
-│           └── db/migration/                 # Flyway scripts (V1__init.sql ...)
-│
-├── logging/                                   # Cross-cutting structured logging
-│   ├── pom.xml
-│   └── src/main/java/.../logging/
-│       ├── MdcContextFilter.java             # Servlet filter — injects correlationId
-│       ├── CorrelationIdInterceptor.java     # Propagates correlation across HTTP calls
-│       ├── KafkaMdcConsumerInterceptor.java  # MDC propagation for Kafka consumers
-│       └── LoggingAutoConfiguration.java    # Spring auto-config entry point
-│
-└── observability/                             # Metrics, tracing, health
-    ├── pom.xml
-    ├── dashboards/
-    │   └── skeletoni-dashboard.json          # Pre-built Grafana dashboard
-    └── src/main/java/.../observability/
-        ├── MetricsConfig.java                # Custom Micrometer meters
-        ├── HealthConfig.java                 # Custom health indicators
-        └── TracingConfig.java               # Micrometer Tracing config
+├── pom.xml                                    # Root aggregation POM
+├── LICENSE
+├── CONTRIBUTING.md
+├── AGENTS.md
+├── README.md
+├── compose.yml
+├── Dockerfile
+└── code/                                      # Source module container
+    ├── pom.xml                                # Main parent POM — BOM + plugin management
+    │
+    ├── contract/                              # Public surface area — all API contracts
+    │   ├── pom.xml
+    │   └── src/main/resources/
+    │       ├── openapi.yml                   # OpenAPI 3 REST spec
+    │       ├── asyncapi.yml                  # AsyncAPI 3 event/messaging spec
+    │       └── proto/                        # Protobuf definitions for gRPC
+    │           └── example.proto
+    │
+    ├── application/                               # Orchestration layer — no framework deps
+    │   ├── pom.xml
+    │   └── src/main/java/.../application/
+    │       ├── command/                           # CQRS write side
+    │       ├── query/                             # CQRS read side
+    │       ├── web/                               # REST controllers
+    │       ├── service/                          # Use case implementations
+    │       └── port/                             # Inbound & outbound port interfaces
+    │
+    ├── domain/                                    # Pure business logic — zero deps
+    │   ├── pom.xml
+    │   └── src/main/java/.../domain/
+    │       ├── model/                             # Aggregates, entities, value objects
+    │       ├── event/                             # Domain events
+    │       └── service/                          # Domain services
+    │
+    ├── infrastructure/                            # All framework & I/O adapters
+    │   ├── pom.xml
+    │   └── src/main/java/.../infrastructure/
+    │       ├── adapter/                          # Persistence, messaging, gRPC adapters
+    │       ├── entity/                           # JPA/Mongo/Couchbase entities
+    │       ├── repository/                       # Spring Data repositories
+    │       ├── mapper/                           # MapStruct mappers
+    │       └── src/main/resources/
+    │           └── db/migration/                 # Flyway scripts (V1__init.sql ...)
+    │
+    ├── boot/                                      # Composition Root / Startup
+    │   ├── pom.xml
+    │   └── src/main/resources/
+    │       ├── application.yml
+    │       └── logback-spring.xml
+    │
+    ├── logging/                                   # Cross-cutting structured logging
+    │   └── pom.xml
+    │
+    ├── observability/                             # Metrics, tracing, health
+    │   └── pom.xml
+    │
+    └── resilience/                                # Fault tolerance patterns
+        └── pom.xml
 ```
 
 ---

@@ -1,0 +1,64 @@
+openapi: 3.1.0
+info:
+  title: Skeletoni API
+  description: API for the skeletoni project
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+paths:
+  /api/v1/examples:
+    post:
+      summary: Create a new example
+      operationId: createExample
+      tags:
+        - Example
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateExampleRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExampleResponse'
+    get:
+      summary: List examples
+      operationId: listExamples
+      tags:
+        - Example
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExampleResponse'
+
+components:
+  schemas:
+    CreateExampleRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "Example Name"
+    ExampleResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
