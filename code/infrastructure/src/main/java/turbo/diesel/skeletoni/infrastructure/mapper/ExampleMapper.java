@@ -8,7 +8,7 @@ import turbo.diesel.skeletoni.domain.model.Example;
 import turbo.diesel.skeletoni.domain.model.ExampleId;
 import turbo.diesel.skeletoni.infrastructure.entity.ExampleJpaEntity;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = {turbo.diesel.skeletoni.domain.model.ExampleId.class})
 public interface ExampleMapper {
 
   @Mapping(target = "id", expression = "java(entity.getId() != null ? new ExampleId(entity.getId()) : null)")
