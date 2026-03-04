@@ -71,6 +71,16 @@ This document explains the architectural decisions (the "Why's") behind **skelet
 - **Cause:** Sonar's static analysis detects hardcoded dummy passwords in example configuration files.
 - **Fix:** These files are already excluded from Sonar analysis via the **`sonar-project.properties`** file at the root. If you create new local configuration templates, ensure they follow the `application-local.yml*` pattern or update the exclusions in that file.
 
+### 9. MapStruct "cannot find symbol" for Value Objects
+- **Error:** `Compilation error: cannot find symbol ... ExampleId` in generated `ExampleMapperImpl.java`.
+- **Cause:** MapStruct's generated implementation may not automatically import domain value objects used in custom `expression` mappings.
+- **Fix:** Use the `imports` attribute in the `@Mapper` annotation: `@Mapper(componentModel = "spring", imports = {ExampleId.class})`.
+
+### 10. Missing Maven Dependency in Central
+- **Error:** `Could not find artifact net.devh:grpc-server-spring-boot-starter:jar:3.1.0.Native`
+- **Cause:** Some "Native" variants of gRPC starters are not always available or correctly indexed in Maven Central for all architectures.
+- **Fix:** Use the stable version: `3.1.0.RELEASE`.
+
 ---
 
 ## 🛠️ Troubleshooting Commands
