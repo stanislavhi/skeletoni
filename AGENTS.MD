@@ -101,9 +101,9 @@ Never commit credentials, tokens, or passwords. Use `application-local.yml` (git
 | `code/pom.xml` | Gemini | ✅ Done | Container module POM |
 | All sub-module `pom.xml` files | Gemini | ✅ Done | contract, application, domain, infrastructure, logging, observability |
 | Project directory scaffolding | Gemini | ✅ Done | All module directories and base layout |
-| `SkeletoniApplication.java` | Gemini | ✅ Done | Migrated to `code/application/src/main/java/turbo/diesel/skeletoni/` |
-| `application.yml` | Gemini | ✅ Done | Migrated to `code/application/src/main/resources/` |
-| `SkeletoniApplicationTests.java` | Gemini | ✅ Done | Migrated to `code/application/src/test/` |
+| `SkeletoniApplication.java` | Gemini | ✅ Done | Migrated to `code/boot/src/main/java/turbo/diesel/skeletoni/` |
+| `application.yml` | Gemini | ✅ Done | Migrated to `code/boot/src/main/resources/` |
+| `SkeletoniApplicationTests.java` | Gemini | ✅ Done | Migrated to `code/boot/src/test/` |
 | `README.md` | Claude | ✅ Done | Full architecture docs, tech stack, module guide |
 | `AGENTS.md` | Claude | ✅ Done | This file |
 | `claude-tasks.md` | Claude | ✅ Done | Claude's action log |
@@ -117,6 +117,36 @@ Never commit credentials, tokens, or passwords. Use `application-local.yml` (git
 | `contract/openapi.yml` | Unassigned | ⬜ Pending | — |
 | `contract/asyncapi.yml` | Unassigned | ⬜ Pending | — |
 | Grafana dashboard JSON | Unassigned | ⬜ Pending | — |
+
+---
+
+## Known Pitfalls for Agents
+
+When contributing to this repository, agents should be aware of these common technical hurdles discovered during the initial scaffolding:
+
+### 1. Module Boundaries & Transitive Deps
+- **Pitfall**: Assuming test dependencies (like H2) are transitive from `infrastructure` to `boot`.
+- **Solution**: Explicitly add test-scoped drivers to the `boot` module's `pom.xml` if needed for `contextLoads` tests.
+
+### 2. MapStruct Imports
+- **Pitfall**: MapStruct failing to resolve domain value objects in custom `expression` strings.
+- **Solution**: Use the `imports` attribute in the `@Mapper` annotation to explicitly import domain classes used in Java expressions.
+
+### 3. Flyway & Hibernate Race Conditions
+- **Pitfall**: Hibernate validation failing with "missing table" because it runs before Flyway migrations.
+- **Solution**: Ensure `flyway-core` and the database-specific Flyway module are correctly added to the `infrastructure` module. Hibernate's `ddl-auto: validate` is set to trigger after Flyway initialization in the current configuration.
+
+### 4. Placeholder Resolution
+- **Pitfall**: Application context failing to load in tests because mandatory environment placeholders (like `SPRING_DATA_COUCHBASE_BUCKET_NAME`) are not resolved.
+- **Solution**: Always provide dummy values for these placeholders in `application-test.yml`, even if the specific auto-configuration is excluded.
+
+### 5. Dependency Stability
+- **Pitfall**: Using `.Native` versions of gRPC or niche Flyway versions that aren't consistently available in Maven Central.
+- **Solution**: Rely on versions managed by the Spring Boot Parent BOM wherever possible. For non-managed dependencies, stick to stable `.RELEASE` or widely used patch versions.
+
+### 6. Modern Java Idioms (Sonar Rules)
+- **Pitfall**: Generating code using older Java patterns (like `collect(Collectors.toList())`) that trigger SonarQube quality gate failures.
+- **Solution**: Always use Java 21 idioms. Specifically, use `Stream.toList()` for collecting streams to unmodifiable lists and prefer `record` for DTOs and value objects.
 
 ---
 

@@ -1,0 +1,5 @@
+script_dir=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
+base_prompt=$(cat "$script_dir/../prompts/SystemPrompt.txt")
+combined_prompt=$base_prompt
+
+exec claude --system-prompt "$combined_prompt" "$@"

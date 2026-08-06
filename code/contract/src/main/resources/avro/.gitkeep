@@ -1,0 +1,13 @@
+# Keeps this directory present in a fresh clone.
+#
+# avro-maven-plugin is bound to generate-sources and fails the build outright when neither
+# src/main/resources/avro nor src/test/avro is a directory:
+#
+#   Failed to execute goal org.apache.avro:avro-maven-plugin:schema (default) on project
+#   contract: neither sourceDirectory ... or testSourceDirectory ... are directories
+#
+# Git does not track empty directories, so without this file the build passes on a developer
+# machine (where the directory exists) and fails in CI (where the clone has no such path).
+#
+# Remove this file once real .avsc schemas live here, or once SKL-9 decides against Avro and
+# the plugin is removed.

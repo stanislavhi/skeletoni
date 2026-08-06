@@ -4,9 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>turbo.diesel</groupId>
-    <artifactId>code</artifactId>
+    <artifactId>skeletoni</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
+
   <artifactId>application</artifactId>
   <name>application</name>
   <description>Application module</description>
@@ -22,35 +24,10 @@
       <artifactId>domain</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>turbo.diesel</groupId>
-      <artifactId>infrastructure</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>turbo.diesel</groupId>
-      <artifactId>logging</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>turbo.diesel</groupId>
-      <artifactId>observability</artifactId>
-      <version>${project.version}</version>
-    </dependency>
 
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 </project>
