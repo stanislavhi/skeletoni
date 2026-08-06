@@ -47,6 +47,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   stays tracked as the template.
 - **SKL-25**: Removed the unused `app.scheduler.example-cron` property — no `@Scheduled` bean or
   `@EnableScheduling` consumed it.
+- **SKL-38**: Rewrote `README.md` to describe the system that exists. It previously documented CQRS
+  handlers, a query side, a scheduler, and Kafka/Mongo/Couchbase/RabbitMQ/gRPC adapters, none of
+  which were ever written. Every capability is now labelled *Implemented* or *Planned*, with
+  aspirational content preserved under an explicit "Planned" heading. Corrects the gRPC port
+  (9091), RabbitMQ credentials, contract file paths, Grafana dashboard path and scope, CI triggers,
+  release workflow behaviour, and the Couchbase env-var prefix; drops claims of virtual threads,
+  rate limiter, bulkhead, distributed tracing and JSON console logging.
 - **SKL-37**: Removed the Maven wrapper. `mvnw` and `mvnw.cmd` had already been deleted, leaving an
   orphaned `.mvn/wrapper/maven-wrapper.properties` that could not run, while `ci.yml` and the
   Dockerfile both invoke plain `mvn`. `README.md` and `CONTRIBUTING.md` updated to plain `mvn` with
