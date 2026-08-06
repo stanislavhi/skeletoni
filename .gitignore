@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Lode (AI project memory) — session scraps only; the rest of lode/ is tracked ###
+lode/tmp/
+# The NetBeans `build/` rule above matches any directory named build at any depth,
+# including lode/build/. Re-include it, or four lode files vanish from every commit.
+!lode/build/
