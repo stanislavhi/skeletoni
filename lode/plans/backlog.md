@@ -80,6 +80,7 @@ SKL-6 is the fulcrum: it activates events, messaging and resilience in one chang
 
 | ID | Type | Pri | Est | Title | Status |
 |---|---|---|---|---|---|
+| SKL-38 | Bug | P1 | M | `README.md` describes a system that does not exist | Todo |
 | SKL-6 | Story | P1 | M | Publish `ExampleCreatedEvent` via out-port + Kafka adapter | Todo |
 | SKL-4 | Bug | P1 | S | Add transaction boundaries to use-case methods | Todo |
 | SKL-5 | Bug | P1 | S | Add input validation across the slice | Todo |
@@ -108,6 +109,7 @@ SKL-6 is the fulcrum: it activates events, messaging and resilience in one chang
 | SKL-30 | Task | P2 | S | Cut `v0.1.0` and establish the tag → release flow | Todo |
 | SKL-24 | Task | P2 | S | Stop skipping tests on release; publish the image | Todo |
 | SKL-26 | Chore | P2 | S | Refresh `AGENTS.MD` ownership map and module tree | Todo |
+| SKL-37 | Chore | P2 | XS | Remove the Maven wrapper and fix docs referencing it | **Done** |
 | SKL-14 | Story | P3 | M | MDC bridges for async, scheduled and Kafka contexts | Todo |
 | SKL-15 | Task | P3 | S | Real checks in `ApplicationHealthIndicator` | Todo |
 | SKL-16 | Story | P3 | L | Distributed tracing (Micrometer Tracing + OTel) | Todo |

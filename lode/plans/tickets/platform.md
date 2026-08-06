@@ -232,6 +232,40 @@ give `build-docker` its own Maven cache, or drop the job and build the image onl
 
 ---
 
+## SKL-37 — Remove the Maven wrapper
+
+**Type** Chore · **Priority** P2 · **Estimate** XS · **Status** **Done**
+
+The wrapper was already half-deleted: `mvnw` and `mvnw.cmd` were gone, leaving an orphaned
+`.mvn/wrapper/maven-wrapper.properties` that could not run on its own. Nothing invoked it —
+`ci.yml` and the `Dockerfile` both call plain `mvn` — while `README.md` and `CONTRIBUTING.md`
+instructed contributors to run `./mvnw`, which would have failed immediately on a fresh clone.
+
+Removed `.mvn/` entirely and dropped the `!.mvn/wrapper/maven-wrapper.jar` negation from
+`.gitignore`. That negation was doubly ineffective: the jar was never tracked, and git cannot
+re-include a file whose parent directory is excluded by the later `.mvn/` rule.
+
+Two documentation bugs fixed in passing, both exposed by rewriting the commands:
+
+- `./mvnw spring-boot:run -pl infrastructure` named a module with no `spring-boot-maven-plugin`
+  and no main class. The runnable module is `boot`: `mvn spring-boot:run -f code/boot/pom.xml`.
+- `mvn verify` was described as running integration tests. It does not — `maven-failsafe-plugin`
+  is unconfigured (`SKL-32`).
+
+All commands now use plain `mvn` with an explicit `-f`, since the reactor root is `code/pom.xml`
+rather than the repo root.
+
+**Trade-off accepted:** contributors must install Maven 3.9+ themselves; there is no pinned build
+tool version. For a skeleton that is reasonable — CI pins the JDK via `setup-java`, and the wrapper
+was providing no reproducibility because nothing used it.
+
+**Acceptance**
+- [x] No `mvnw`, `mvnw.cmd`, or `.mvn/` tracked; `.gitignore` negation removed
+- [x] No `./mvnw` references remain in any root document
+- [x] `mvn -B clean verify -f code/pom.xml` green after removal
+
+---
+
 ## SKL-28 — Move `CHANGELOG.md` to the repo root
 
 **Type** Chore · **Priority** P2 · **Estimate** XS · **Status** Todo

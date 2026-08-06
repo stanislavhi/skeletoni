@@ -75,6 +75,71 @@ human-facing troubleshooting commands.
 
 ---
 
+## SKL-38 — `README.md` describes a system that does not exist
+
+**Type** Bug · **Priority** P1 · **Estimate** M · **Status** Todo
+
+The README's "Module Structure" section is a design document written before implementation and
+presented as a description of the code. Twelve files it names were checked; **all twelve are
+absent.** The entire project contains 23 Java files.
+
+| README claims | Reality |
+|---|---|
+| `application/command/CreateExampleCommandHandler.java` | absent — no CQRS handlers exist |
+| `application/query/GetExampleQuery.java` + handler | absent — no query side at all |
+| `application/scheduler/ExampleScheduler.java` | absent — no `@Scheduled`, no `@EnableScheduling` |
+| `application/port/out/ExampleEventPublisher.java` | absent (`SKL-6`) |
+| `domain/service/ExampleDomainService.java` | absent |
+| `infrastructure/kafka/`, `mongodb/`, `couchbase/`, `rabbitmq/`, `grpc/` adapters | none exist (`SKL-10`) |
+| `infrastructure/config/{Kafka,RabbitMQ,Mongo,Scheduler}Config.java` | none exist |
+| `logging/MdcContextFilter`, `CorrelationIdInterceptor`, `KafkaMdcConsumerInterceptor`, `LoggingAutoConfiguration` | only `CorrelationIdFilter` exists |
+| `observability/dashboards/skeletoni-dashboard.json` | actually `infra/grafana/dashboards/skeletoni-jvm.json` |
+
+Structural errors beyond missing files:
+
+- The module tree places modules at the **repo root** (`skeletoni/contract/`). They live under
+  `code/`, and the reactor root is `code/pom.xml`, not the repo root — the single most important
+  fact about building this project.
+- Resource paths are wrong: `contract/src/main/resources/openapi/openapi.yml` is actually
+  `contract/src/main/resources/openapi.yml`. Same for `asyncapi/`.
+- `logging` and `observability` are shown but `resilience` and `boot` are omitted entirely.
+
+False claims elsewhere in the file:
+
+- Tech stack lists "Virtual Threads / Project Loom" and "Scheduling: Spring `@Scheduled` +
+  Virtual Thread executor" — no virtual thread configuration exists anywhere.
+- Resilience4j is described as "Circuit Breaker, Retry, Rate Limiter, Bulkhead"; only circuit
+  breaker and retry are configured, and neither is applied to any call site (`SKL-13`).
+- Observability claims "Distributed Tracing"; there is no tracing dependency (`SKL-16`).
+- The testing table claims `@WebMvcTest` controller slice tests and unit tests for `domain` and
+  `application` — none exist (`SKL-18`, `SKL-19`).
+- "Testcontainers manages real PostgreSQL, MongoDB, Kafka, and RabbitMQ containers" — only
+  PostgreSQL, and that test does not execute (`SKL-32`).
+- "SonarCloud analysis runs on every push to `main`" — `ci.yml` now triggers on all branches.
+
+**Why this outranks most of the backlog.** This project exists to be cloned. The README is the first
+and often only thing a user reads, and it currently promises a working CQRS/multi-protocol service.
+Someone clones it, looks for `ExampleKafkaProducer`, and finds nothing. Every other gap in this
+backlog is a missing feature; this one is a false claim about what was delivered.
+
+Recommended approach: rewrite the module tree from the actual filesystem, and split every
+aspirational claim into a clearly-labelled "Planned / not yet implemented" section rather than
+deleting it — the design intent is genuinely useful, it just must not masquerade as current state.
+`lode/` now holds the verified structure and can be used as the source.
+
+**Acceptance**
+- [ ] Module tree generated from the real filesystem, with modules under `code/`
+- [ ] Every named file in the README verified to exist
+- [ ] Reactor root (`code/pom.xml`) stated explicitly
+- [ ] Unimplemented capabilities moved under an explicit "Planned" heading
+- [ ] Tech stack table claims only what is wired: no virtual threads, no tracing, no rate
+      limiter/bulkhead
+- [ ] Testing section matches `lode/testing/summary.md`
+
+**Related** SKL-26 (`AGENTS.MD` drift), SKL-27 (consolidate root docs), SKL-10
+
+---
+
 ## Standing rule
 
 Closing any ticket includes updating affected lode files **in the same change**. A ticket whose lode
