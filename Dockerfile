@@ -6,7 +6,9 @@ WORKDIR /app
 COPY pom.xml .
 COPY code/pom.xml code/
 
-# Copy all module POMs to cache dependencies
+# Copy all module POMs to cache dependencies.
+# IMPORTANT: every new Maven module MUST get its own COPY line below before
+# `dependency:go-offline` runs, otherwise the reactor is incomplete and the build fails.
 COPY code/contract/pom.xml code/contract/
 COPY code/application/pom.xml code/application/
 COPY code/domain/pom.xml code/domain/
@@ -30,7 +32,7 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 # Copy the built artifact from the boot module
-COPY --from=build /app/code/boot/target/boot-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/code/boot/target/boot-*.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
