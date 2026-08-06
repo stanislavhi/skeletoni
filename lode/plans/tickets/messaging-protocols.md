@@ -169,6 +169,8 @@ This is not free — their auto-configurations stay active, which is precisely w
 - `application-test.yml` excludes four auto-configurations **and** supplies dummy placeholders
 - `compose.yml` runs Couchbase, which is heavy and requires manual UI setup to be useful
 - every new `@SpringBootTest` inherits that ceremony
+- **CI pays for it on every run**: `infrastructure` resolves **307 dependencies** for five classes,
+  against 1–70 for every other module. See SKL-36 for the measured cost.
 
 The skeleton's value is showing one thing done properly, not eight things declared. Options:
 

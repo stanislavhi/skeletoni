@@ -183,6 +183,55 @@ its `driver-class-name` produces a self-inconsistent datasource.
 
 ---
 
+## SKL-36 — CI resolves the whole dependency tree twice per run
+
+**Type** Task · **Priority** P2 · **Estimate** S · **Status** Todo
+
+Measured on a real run: **509 artifact downloads before the build even cleared the `contract`
+module.** Three compounding causes.
+
+**1. The dependency tree is oversized.** Resolved dependency counts:
+
+| Module | Deps |
+|---|---|
+| `domain` | 1 |
+| `observability` | 40 |
+| `logging` | 43 |
+| `application` | 49 |
+| `resilience` | 51 |
+| `contract` | 70 |
+| **`infrastructure`** | **307** |
+| `boot` | 308 |
+
+`infrastructure` contains five classes. The other 300-odd dependencies are Mongo, Couchbase,
+RabbitMQ, Kafka, gRPC, Avro, Confluent and six Testcontainers modules with no code behind them.
+**SKL-10 is the fix**, and this is its concrete cost.
+
+**2. The Maven cache key is fragile.** `actions/setup-java` with `cache: 'maven'` keys on
+`hashFiles('**/pom.xml')`. Any pom edit invalidates it, so active development on module POMs means
+a cold cache on nearly every push.
+
+**3. `build-docker` re-resolves everything.** The Dockerfile runs `dependency:go-offline` inside the
+image build. Its only cache is `type=gha` docker layers, and the poms are `COPY`ed *before*
+`go-offline` — so the same pom edit that busts the Maven cache also busts the layer. The result is
+two full downloads per run in the same workflow.
+
+Cause 3 is the cheapest to fix and the most clearly wasteful: `build-docker` rebuilds the
+application from source purely to validate the Dockerfile, duplicating work the `build` job already
+did. Options: pass the jar from `build` as an artifact and have the runtime stage consume it, or
+give `build-docker` its own Maven cache, or drop the job and build the image only on release
+(pairs with SKL-24, which currently publishes no image at all).
+
+**Acceptance**
+- [ ] A pom-only change no longer triggers two full dependency resolutions in one run
+- [ ] `build-docker` either reuses the `build` job's artifact or is folded into the release flow
+- [ ] Wall-clock time for a warm-cache run recorded here as a baseline
+- [ ] [../../build/ci-cd.md](../../build/ci-cd.md) updated
+
+**Related** SKL-10 (the root cause of the volume), SKL-24 (image publishing)
+
+---
+
 ## SKL-28 — Move `CHANGELOG.md` to the repo root
 
 **Type** Chore · **Priority** P2 · **Estimate** XS · **Status** Todo

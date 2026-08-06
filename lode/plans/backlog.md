@@ -102,6 +102,7 @@ SKL-6 is the fulcrum: it activates events, messaging and resilience in one chang
 | ID | Type | Pri | Est | Title | Status |
 |---|---|---|---|---|---|
 | SKL-12 | Task | P2 | S | Attach or remove the Logstash appender | Todo |
+| SKL-36 | Task | P2 | S | CI resolves the whole dependency tree twice per run | Todo |
 | SKL-28 | Chore | P2 | XS | Move `CHANGELOG.md` to the repo root | Todo |
 | SKL-29 | Chore | P2 | S | Settle the commit message convention | Todo |
 | SKL-30 | Task | P2 | S | Cut `v0.1.0` and establish the tag → release flow | Todo |
