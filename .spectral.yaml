@@ -1,0 +1,19 @@
+# Spectral ruleset for the API contracts linted by .github/workflows/ci.yml.
+#
+# The Spectral CLI does not fall back to a default ruleset — without this file it exits with
+# code 2 and "No ruleset has been found", failing the lint-contracts job regardless of whether
+# the specs are valid.
+#
+# spectral:oas covers openapi.yml (OpenAPI 3.1); spectral:asyncapi covers asyncapi.yml
+# (AsyncAPI 3.0). Both are built into the CLI, so no extra install is needed.
+extends:
+  - spectral:oas
+  - spectral:asyncapi
+
+rules:
+  # The specs are intentionally minimal skeleton examples; these would otherwise be warnings
+  # on every run and train reviewers to ignore Spectral output.
+  oas3-api-servers: off
+  info-contact: off
+  info-license: off
+  license-url: off
