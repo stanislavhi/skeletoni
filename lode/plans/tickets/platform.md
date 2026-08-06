@@ -222,10 +222,17 @@ did. Options: pass the jar from `build` as an artifact and have the runtime stag
 give `build-docker` its own Maven cache, or drop the job and build the image only on release
 (pairs with SKL-24, which currently publishes no image at all).
 
+**Measured baseline.** With the Maven cache warm (no pom change between pushes), `Build and Test`
+completes in **81–95s** across six consecutive runs. Cold runs earlier in the same session took
+roughly 5 minutes. So the cache works when its key is stable; the cost is entirely concentrated in
+pom-touching commits, which is most of active development. That makes cause 2 the dominant one in
+practice and cause 1 the reason each miss is so expensive.
+
 **Acceptance**
 - [ ] A pom-only change no longer triggers two full dependency resolutions in one run
 - [ ] `build-docker` either reuses the `build` job's artifact or is folded into the release flow
-- [ ] Wall-clock time for a warm-cache run recorded here as a baseline
+- [x] Warm-cache baseline recorded: 81–95s for `Build and Test`
+- [ ] Cold-cache time re-measured after `SKL-10` prunes the tree, to confirm the win
 - [ ] [../../build/ci-cd.md](../../build/ci-cd.md) updated
 
 **Related** SKL-10 (the root cause of the volume), SKL-24 (image publishing)

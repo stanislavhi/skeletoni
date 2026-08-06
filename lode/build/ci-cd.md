@@ -2,6 +2,14 @@
 
 Two workflows: `.github/workflows/ci.yml` and `.github/workflows/release.yml`.
 
+> **`.github/` exists only on `feature/SKL-1`.** `origin/develop` has no workflows at all, so any
+> branch cut from `develop` gets **zero CI** until that branch merges. "CI is green" currently means
+> green on `feature/SKL-1` only. Verify which base a branch sits on before trusting an absence of
+> failures.
+
+Warm-cache baseline: `Build and Test` completes in 81–95s. A pom change busts the Maven cache key
+and pushes that to roughly 5 minutes — see `SKL-36`.
+
 ## CI — triggers
 
 ```yaml
