@@ -68,10 +68,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          # Providing env vars for tests that might need them
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/skeletoni
-          SPRING_DATASOURCE_USERNAME: user
-          SPRING_DATASOURCE_PASSWORD: password
+          # Do NOT set SPRING_DATASOURCE_* here. Environment variables outrank
+          # profile YAML in Spring Boot's property order, so they override the H2 url in
+          # application-test.yml while leaving driver-class-name: org.h2.Driver untouched.
+          # The result is a Postgres url driven by the H2 driver:
+          #   Driver org.h2.Driver claims to not accept jdbcUrl, jdbc:postgresql://...
+          # The test profile is self-contained; integration tests provision their own
+          # database through Testcontainers.
         run: |
           if [ -n "$SONAR_TOKEN" ]; then
             mvn -B clean verify sonar:sonar -f code/pom.xml
