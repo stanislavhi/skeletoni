@@ -95,9 +95,27 @@ board**; start there each session.
 | [plans/tickets/documentation.md](plans/tickets/documentation.md) | `SKL-DOC` — SKL-26, SKL-27 |
 | [plans/roadmap.md](plans/roadmap.md) | Stub — superseded by the board; delete once committed |
 
+## sessions/
+
+Knowledge staging area — `lode/sessions/YYYY-MM-DD-<topic>.md`. Holds rejected approaches with their
+failure modes, unresolved questions, and insights not yet validated enough for a permanent lode
+file. Durable until the knowledge graduates or the question resolves; then the file is deleted.
+
+Not a diary and not a handover. Created by `/closeout`, read by `/reanchor`. Template:
+`~/IdeaProjects/engineering-lode/session-lode-template.md`.
+
 ## tmp/
 
 Git-ignored session scratch. Handovers, working notes, changelog-style records. Nothing durable.
+
+## Slash commands
+
+`.claude/commands/` carries the two workflows that keep this lode honest:
+
+| Command | Use |
+|---|---|
+| `/closeout` | End of session: update every affected lode file, move ticket statuses, verify the build *and* CI, changelog, commit, PR |
+| `/reanchor` | Mid-session drift: re-read core lode + backlog + domain files, reconcile contradictions explicitly |
 
 ## Relationship to root documentation
 
