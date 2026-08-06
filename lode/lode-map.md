@@ -104,6 +104,10 @@ file. Durable until the knowledge graduates or the question resolves; then the f
 Not a diary and not a handover. Created by `/closeout`, read by `/reanchor`. Template:
 `~/IdeaProjects/engineering-lode/session-lode-template.md`.
 
+| File | Contents |
+|---|---|
+| [sessions/2026-08-06-lode-bootstrap-and-ci-recovery.md](sessions/2026-08-06-lode-bootstrap-and-ci-recovery.md) | Rejected diagnoses (CI readiness race, verbatim command port), open questions on `SKL-9`/`SKL-20`/`SKL-32`/`SKL-36` |
+
 ## tmp/
 
 Git-ignored session scratch. Handovers, working notes, changelog-style records. Nothing durable.

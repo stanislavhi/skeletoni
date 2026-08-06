@@ -37,6 +37,19 @@ Domain and project language used across skeletoni. Keep entries as `term — mea
 | Mongo document | `{Entity}Document` | `ExampleDocument` |
 | MapStruct mapper | `{Entity}Mapper` | `ExampleMapper` |
 
+## Backlog
+
+- **`SKL-`** — ticket prefix for all tracked work, matching the branch convention
+  (`feature/SKL-<n>`). `SKL-1` is the original scaffolding; numbering is never reused.
+- **Epic** — grouping of related tickets, one file under `lode/plans/tickets/`:
+  `SKL-CORE`, `SKL-MSG`, `SKL-OBS`, `SKL-QLTY`, `SKL-PLAT`, `SKL-DOC`.
+- **Board** — `lode/plans/backlog.md`; ticket statuses, sprint ordering, dependency graph.
+- **Known gap** — a present divergence between documented and actual behaviour, in
+  `lode/plans/known-gaps.md`. Deleted when its ticket closes; the file is state, not history.
+- **Session lode** — `lode/sessions/YYYY-MM-DD-<topic>.md`; staging area for rejected approaches and
+  unresolved questions until they graduate to a permanent lode file.
+- **Handover** — `lode/tmp/handover-*.md`; consumed once by the next session, then deleted.
+
 ## Operational
 
 - **Local profile** — `local`, the default active profile; reads `application-local.yml`.

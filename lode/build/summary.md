@@ -47,7 +47,7 @@ Multi-stage `Dockerfile` at repo root:
 ```mermaid
 flowchart LR
   S1["Stage 1: maven:3.9.9-eclipse-temurin-21-alpine<br/>copy POMs → dependency:go-offline → copy src → package -DskipTests"]
-  S2["Stage 2: eclipse-temurin:21-jre-alpine<br/>COPY boot-0.0.1-SNAPSHOT.jar app.jar<br/>EXPOSE 8080"]
+  S2["Stage 2: eclipse-temurin:21-jre-alpine<br/>COPY boot-*.jar app.jar<br/>EXPOSE 8080"]
   S1 --> S2
 ```
 

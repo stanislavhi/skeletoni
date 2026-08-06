@@ -47,6 +47,29 @@ public class ExampleService implements ExampleUseCase {
 - CI lints both YAML contracts with Spectral — a malformed contract fails the build.
 - DTOs are owned exclusively by `contract`. Never redeclare them elsewhere.
 
+## Verification
+
+**A green local build is not evidence.** This project has passed locally and failed in CI three
+separate times, each for a reason a developer machine structurally cannot surface. Before claiming a
+change works, ask what CI supplies or withholds that your machine does not:
+
+| Trap | Why local passes | Ticket |
+|---|---|---|
+| Empty directory a plugin requires | it exists on your disk; git does not track empty dirs | `SKL-33` |
+| Tool config file absent | the tool only runs in CI | `SKL-34` |
+| CI-exported env vars | your shell does not set them; they outrank profile YAML | `SKL-35` |
+| Silently skipped tests | exit code is 0 either way | `SKL-32` |
+
+Corollaries:
+
+- **Check the test count, not the exit code.** `mvn verify` currently reports `Tests run: 1` and
+  passes while skipping the only integration test.
+- **Partial property overrides are worse than none.** Overriding a datasource `url` without its
+  `driver-class-name` produced a Postgres URL driven by the H2 driver.
+- **Read the actual failure before theorising.** `Unable to determine Dialect` plus a documented
+  service-readiness race pointed at a startup race; the real cause was a driver mismatch, found by
+  reproducing it locally.
+
 ## Build & tooling
 
 - Approved stack only (`AGENTS.MD`): Maven, Spring Boot 4, Kafka/RabbitMQ, Postgres/Mongo/Couchbase,

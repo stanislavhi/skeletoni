@@ -13,7 +13,7 @@ Three concerns, two modules, one external stack.
 ```yaml
 management:
   endpoints.web.exposure.include: health,info,prometheus,metrics
-  endpoint.health.show-details: always
+  endpoint.health.show-details: when-authorized   # `always` only on the local profile
   metrics.tags.application: ${spring.application.name}
 ```
 

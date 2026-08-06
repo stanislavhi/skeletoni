@@ -80,9 +80,10 @@ tree (though `boot` appears in the ownership map). Its stated dependency directi
 
 ## Testing
 
-### 11. Only two tests exist, and one does not compile · `SKL-18`, `SKL-31`
-`SkeletoniApplicationTests` (context load) and `ExamplePostgresAdapterIT` — the latter blocked by
-gap 0. Everything else is untested despite the mandatory-tests rule. Gap list in
+### 11. Only two tests exist, and one never executes · `SKL-18`, `SKL-32`
+`SkeletoniApplicationTests` (context load) and `ExamplePostgresAdapterIT` — the latter compiles but
+is silently skipped per gap 0, so its assertions have never run against a real database. Everything
+else is untested despite the mandatory-tests rule. Gap list in
 [../testing/summary.md](../testing/summary.md).
 
 ### 12. Nothing verifies controller ⟷ `openapi.yml` agreement · `SKL-20`
@@ -102,9 +103,9 @@ incomplete reactor. Now commented in the Dockerfile; the checklist lives in
 [../build/maven-conventions.md](../build/maven-conventions.md).
 
 ### 15. Release builds skip tests, and no image is ever published · `SKL-24`
-`release.yml` runs `package -DskipTests`, so a tag can ship a jar CI never validated — currently
-including a test suite that does not compile (gap 0). Separately, `ci.yml`'s `build-docker` uses
-`push: false` and no workflow publishes an image.
+`release.yml` runs `package -DskipTests`, so a tag can ship a jar CI never validated — and since
+integration tests do not execute anyway (gap 0), even a green run proves less than it looks.
+Separately, `ci.yml`'s `build-docker` uses `push: false` and no workflow publishes an image.
 
 ### 16. No release has ever been cut · `SKL-30`
 `git tag -l` is empty, the version is still `0.0.1-SNAPSHOT`, and the changelog's `[Unreleased]`
