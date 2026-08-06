@@ -65,6 +65,9 @@ serializer and a running Schema Registry. Pick one.
 
 ## Documentation drift
 
+`README.md` was the worst offender here and has been rewritten (`SKL-38`). It now labels every
+capability *Implemented* or *Planned*. `AGENTS.MD` and the remaining root docs have not.
+
 ### 9. `AGENTS.MD` ownership map is stale · `SKL-26`
 `compose.yml`, `Dockerfile`, `ci.yml`, `release.yml`, `openapi.yml`, `asyncapi.yml` and the Grafana
 dashboard are all marked "⬜ Pending / Unassigned" but exist and are complete.

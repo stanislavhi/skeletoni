@@ -77,7 +77,38 @@ human-facing troubleshooting commands.
 
 ## SKL-38 — `README.md` describes a system that does not exist
 
-**Type** Bug · **Priority** P1 · **Estimate** M · **Status** Todo
+**Type** Bug · **Priority** P1 · **Estimate** M · **Status** **Done**
+
+**Resolution.** README rewritten so every claim is labelled *Implemented* or *Planned*. Aspirational
+content was preserved under an explicit "Planned — design intent, not yet built" heading rather than
+deleted: the intended shape is genuinely useful to someone building on the skeleton, it just must
+not read as a description of current state. A "What works today" table near the top gives the honest
+summary in one screen.
+
+Factual corrections made, each verified against the filesystem or config:
+
+| Was | Is |
+|---|---|
+| gRPC on `localhost:9090`, env var `GRPC_PORT` | port `9091`, set via `grpc.server.port` in YAML — no env var |
+| RabbitMQ `guest/guest` | `user` / `password` |
+| `resources/openapi/openapi.yml`, `resources/asyncapi/asyncapi.yml` | both at `resources/` root, no subdirectories |
+| `observability/dashboards/skeletoni-dashboard.json` covering Kafka lag, RabbitMQ depth, business metrics | `infra/grafana/dashboards/skeletoni-jvm.json`, JVM + HTTP built-ins only |
+| "Every log line is emitted as JSON", `traceId`/`spanId` via Micrometer Tracing | plain-text console; Logstash appender defined but unattached; no tracing dependency |
+| CI "on every push and PR to `main`" | every branch, every PR, plus `workflow_dispatch` |
+| `release.yml` pushes a Docker image, needs registry secrets | builds no image; only `SONAR_TOKEN` and the automatic `GITHUB_TOKEN` |
+| `SPRING_COUCHBASE_CONNECTION_STRING`, `MANAGEMENT_PROMETHEUS_ENABLED` | `SPRING_DATA_COUCHBASE_*`; the latter is not used at all |
+| Virtual Threads / Project Loom, rate limiter, bulkhead, distributed tracing | removed — none exist in any form |
+
+Warnings added where a reader would otherwise be misled: `mvn verify` does not execute `*IT`
+classes (`SKL-32`), the Avro `.gitkeep` is load-bearing (`SKL-33`), `SPRING_DATASOURCE_*` must stay
+out of CI (`SKL-35`), and empty package directories are reserved scaffolding rather than code.
+
+**Correction to the original report below:** it was written against the copy on `origin/develop`.
+The module tree on `feature/SKL-1` had already been partially fixed — it showed the `code/`
+container and the correct eight modules. The file-level claims and everything outside the tree were
+still wrong on both branches.
+
+### Original report
 
 The README's "Module Structure" section is a design document written before implementation and
 presented as a description of the code. Twelve files it names were checked; **all twelve are
