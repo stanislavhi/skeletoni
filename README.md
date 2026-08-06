@@ -170,7 +170,7 @@ This brings up: PostgreSQL, MongoDB, Couchbase, Kafka + Kafka UI, RabbitMQ Manag
 ### 3. Run the service
 
 ```bash
-./mvnw spring-boot:run -pl infrastructure
+mvn spring-boot:run -f code/boot/pom.xml
 ```
 
 The service starts on **http://localhost:8080**.
@@ -314,8 +314,8 @@ Jobs are declared in `application/scheduler/` using `@Scheduled`. All cron expre
 ## Testing Strategy
 
 ```bash
-./mvnw test          # Unit tests only (fast, no Docker required)
-./mvnw verify        # Unit + integration tests (Docker required)
+mvn test   -f code/pom.xml   # Unit tests only
+mvn verify -f code/pom.xml   # Full build
 ```
 
 | Layer | Scope | Tools |
@@ -334,7 +334,7 @@ Testcontainers manages real PostgreSQL, MongoDB, Kafka, and RabbitMQ containers 
 SonarCloud analysis runs on every push to `main` via GitHub Actions. To analyze locally:
 
 ```bash
-./mvnw sonar:sonar \
+mvn sonar:sonar -f code/pom.xml \
   -Dsonar.projectKey=your-org_skeletoni \
   -Dsonar.organization=your-org \
   -Dsonar.token=$SONAR_TOKEN

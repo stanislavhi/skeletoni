@@ -8,7 +8,7 @@ First off, thanks for taking the time to contribute!
 ## Development Setup
 1. Java 21+
 2. Docker & Docker Compose
-3. Maven 3.9+ (or use `./mvnw`)
+3. Maven 3.9+ (no wrapper is committed — install Maven locally)
 
 Run local infrastructure:
 ```bash
