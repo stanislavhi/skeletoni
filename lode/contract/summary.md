@@ -25,8 +25,11 @@ code/contract/src/main/
   `compile-custom`, generating protobuf messages **and** gRPC stubs into
   `turbo.diesel.skeletoni.contract.grpc`. Requires `os-maven-plugin` (declared as a build extension
   in the parent POM) to resolve `${os.detected.classifier}`.
-- `avro-maven-plugin` binds `schema` to `generate-sources` reading
-  `src/main/resources/avro/` — currently a no-op because the directory is empty.
+- `avro-maven-plugin` binds `schema` to `generate-sources` reading `src/main/resources/avro/`.
+  The directory holds only a `.gitkeep` — but that file is **load-bearing**. The plugin fails the
+  build outright when neither `src/main/resources/avro` nor `src/test/avro` is a directory, and git
+  does not track empty directories. Without the placeholder the module builds on a developer machine
+  and dies in CI at `generate-sources`, taking the whole reactor with it (`SKL-33`).
 - If your IDE reports `package turbo.diesel.skeletoni.contract.grpc does not exist`, run
   `mvn generate-sources -pl code/contract` and reload the Maven project.
 

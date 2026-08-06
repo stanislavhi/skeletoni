@@ -46,6 +46,9 @@ Cheap fixes that remove false signals. Everything here is XS/S except SKL-10.
 | SKL-3 | Bug | P0 | S | Resolve `exampleConsumer` binding that has no bean | Todo |
 | SKL-10 | Task | P1 | M | Prune or gate unimplemented starters | Todo |
 | SKL-31 | Bug | P0 | S | `ExamplePostgresAdapterIT` does not compile — build was red | **Done** |
+| SKL-33 | Bug | P0 | XS | Keep the Avro source directory present in a fresh clone | **Done** |
+| SKL-34 | Bug | P0 | XS | Add the Spectral ruleset the lint job requires | **Done** |
+| SKL-35 | Bug | P0 | XS | Stop overriding the test datasource from CI env vars | **Done** |
 | SKL-2 | Bug | P0 | XS | Untrack `application-local.yml` from git index | **Done** |
 | SKL-11 | Bug | P1 | XS | Add `%X{correlationId}` to console log pattern | **Done** |
 | SKL-22 | Chore | P2 | XS | Move dev-only settings into the `local` profile | **Done** |
@@ -55,6 +58,21 @@ Cheap fixes that remove false signals. Everything here is XS/S except SKL-10.
 `SKL-32` is the immediate blocker: `mvn verify` is green but executes exactly one test, so no ticket
 whose acceptance depends on an integration test can actually be verified. Detail:
 [tickets/core-correctness.md](tickets/core-correctness.md).
+
+### Lesson from SKL-33/34/35
+
+All three were **invisible locally and fatal in CI**, and all three predate this backlog — CI had
+been red long enough that its failure stopped being read. A green local build proves less than it
+appears to:
+
+| Ticket | Why local passed | Why CI failed |
+|---|---|---|
+| SKL-33 | empty `avro/` dir exists on disk | git does not track empty directories |
+| SKL-34 | lint job never runs locally | Spectral CLI has no default ruleset |
+| SKL-35 | no `SPRING_DATASOURCE_*` in the shell | workflow exported them, clobbering the H2 url |
+
+Before claiming a change is verified, ask what the CI environment supplies or withholds that a
+developer machine does not.
 
 ## Sprint 2 — "complete the vertical slice"
 

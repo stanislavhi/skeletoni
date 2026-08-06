@@ -27,6 +27,13 @@ Service containers: `postgres:17-alpine`, `mongo:8.0`, `apache/kafka:3.9.0`,
 `confluentinc/cp-schema-registry:7.8.0`. Note **no Couchbase and no RabbitMQ service** — tests that
 need them must use Testcontainers, not GitHub services.
 
+**Do not add `SPRING_DATASOURCE_*` to this job's `env:`.** Environment variables outrank profile
+YAML in Spring Boot's property source order, so they replace the H2 url in `application-test.yml`
+while leaving `driver-class-name: org.h2.Driver` untouched — producing
+`Driver org.h2.Driver claims to not accept jdbcUrl, jdbc:postgresql://...` and a failed context
+load. The test profile is self-contained; integration tests provision their own database through
+Testcontainers. This cost a red CI for some time (`SKL-35`).
+
 Steps: checkout with `fetch-depth: 0` (Sonar needs full history for blame/relevancy) → JDK 21
 temurin with Maven cache → `~/.sonar/cache` cache → build:
 
@@ -61,7 +68,15 @@ GitHub Actions cache (`type=gha`, `mode=max`). Validates the Dockerfile; publish
 
 Independent job. Installs `@stoplight/spectral-cli` and lints both
 `code/contract/src/main/resources/openapi.yml` and `.../asyncapi.yml`.
-There is **no `.spectral.yaml`** in the repo, so Spectral applies its default rulesets.
+
+The ruleset is `.spectral.yaml` at the repo root, extending the built-in `spectral:oas` and
+`spectral:asyncapi`. **It is required, not optional**: the Spectral CLI has no implicit default and
+exits with code 2 and `No ruleset has been found` without it — the job fails while linting nothing
+(`SKL-34`). Four style rules (`oas3-api-servers`, `info-contact`, `info-license`, `license-url`) are
+disabled because they are noise for a skeleton's example specs.
+
+Spectral fails the job only on **errors**; warnings pass. Both contracts currently emit warnings
+only (missing operation descriptions, undeclared tags, absent `servers`/`tags` in AsyncAPI).
 
 ## Release
 

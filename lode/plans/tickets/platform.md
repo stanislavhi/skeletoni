@@ -99,6 +99,90 @@ delete the property. If added, note that scheduled threads have no correlation I
 
 ---
 
+## SKL-33 — Keep the Avro source directory present in a fresh clone
+
+**Type** Bug · **Priority** P0 · **Estimate** XS · **Status** **Done**
+
+`avro-maven-plugin` is bound to `generate-sources` and fails outright when neither
+`src/main/resources/avro` nor `src/test/avro` is a directory:
+
+```
+Failed to execute goal org.apache.avro:avro-maven-plugin:1.12.0:schema (default) on project
+contract: neither sourceDirectory .../code/contract/src/main/resources/avro or
+testSourceDirectory .../code/contract/src/test/avro are directories
+```
+
+Git does not track empty directories, so the directory existed on every developer machine and in
+**no** CI clone. The build passed locally and failed in CI at the second reactor module, marking the
+other seven `SKLIPPED` — meaning **no test had ever run in CI**.
+
+This is the general trap: an empty directory that a build plugin requires is invisible to git.
+Resolved with a `.gitkeep` carrying an explanatory comment. Remove it once real `.avsc` schemas
+exist, or once SKL-9 decides against Avro and the plugin goes.
+
+**Acceptance**
+- [x] `code/contract/src/main/resources/avro/.gitkeep` tracked
+- [x] `contract` module builds from a clean clone
+- [x] [../../contract/summary.md](../../contract/summary.md) records why the file is load-bearing
+
+---
+
+## SKL-34 — Add the Spectral ruleset the lint job requires
+
+**Type** Bug · **Priority** P0 · **Estimate** XS · **Status** **Done**
+
+The `lint-contracts` job ran `spectral lint` with no ruleset present, and the Spectral CLI has no
+implicit default:
+
+```
+No ruleset has been found. Please provide a ruleset using the --ruleset CLI argument, or make
+sure your ruleset file matches .?spectral.(js|ya?ml|json)
+```
+
+Exit code 2 on the first lint step. The job had **never linted anything** — it failed before
+evaluating either spec, so the contract-first guarantee CI appeared to provide did not exist.
+
+Added `.spectral.yaml` at the repo root extending built-in `spectral:oas` and `spectral:asyncapi`,
+with four style rules disabled as noise for skeleton example specs. Spectral fails only on errors;
+both contracts now emit warnings only and exit 0.
+
+**Acceptance**
+- [x] `.spectral.yaml` at repo root; both specs lint with exit 0
+- [x] `lint-contracts` green in CI
+- [x] [../../build/ci-cd.md](../../build/ci-cd.md) corrected — it previously claimed Spectral
+      "applies its default rulesets", which is false
+
+---
+
+## SKL-35 — Stop overriding the test datasource from CI env vars
+
+**Type** Bug · **Priority** P0 · **Estimate** XS · **Status** **Done**
+
+`ci.yml` exported `SPRING_DATASOURCE_URL/USERNAME/PASSWORD` into the Maven step. Environment
+variables outrank profile YAML in Spring Boot's property source order, so the Postgres url replaced
+the H2 url from `application-test.yml` — while `driver-class-name: org.h2.Driver` stayed, because no
+env var overrides it:
+
+```
+Driver org.h2.Driver claims to not accept jdbcUrl, jdbc:postgresql://localhost:5432/skeletoni
+  -> Unable to determine Dialect without JDBC metadata
+  -> SkeletoniApplicationTests.contextLoads fails, boot module fails
+```
+
+Reproduced locally by exporting the same three variables — **not** a Postgres readiness race, which
+was the obvious-looking but wrong diagnosis given `KNOWLEDGE-BASE.md` §17 documents exactly such a
+race. The env vars are removed, with a comment explaining why they must not return.
+
+General lesson: partial property overrides are more dangerous than none. Overriding a `url` without
+its `driver-class-name` produces a self-inconsistent datasource.
+
+**Acceptance**
+- [x] `SPRING_DATASOURCE_*` removed from `ci.yml`, with a comment preventing reintroduction
+- [x] Root cause reproduced locally before changing anything
+- [x] [../../build/ci-cd.md](../../build/ci-cd.md) documents the constraint
+
+---
+
 ## SKL-28 — Move `CHANGELOG.md` to the repo root
 
 **Type** Chore · **Priority** P2 · **Estimate** XS · **Status** Todo
