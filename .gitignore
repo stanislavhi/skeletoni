@@ -40,6 +40,9 @@ Thumbs.db
 ### Logs ###
 *.log
 
+### Local config (secrets) ###
+**/application-local.yml
+
 ### Maven ###
 .mvn/
 bin/
