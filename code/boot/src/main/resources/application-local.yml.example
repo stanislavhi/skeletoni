@@ -21,3 +21,11 @@ spring:
   rabbitmq:
     username: user
     password: password
+
+  jpa:
+    show-sql: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
