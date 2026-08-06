@@ -1,4 +1,4 @@
-package turbo.diesel.skeletoni.application.web;
+package turbo.diesel.skeletoni.contract.web;
 
 import java.util.List;
 
@@ -12,11 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import turbo.diesel.skeletoni.application.command.CreateExampleCommand;
-import turbo.diesel.skeletoni.application.port.in.ExampleUseCase;
 import turbo.diesel.skeletoni.contract.dto.CreateExampleRequest;
 import turbo.diesel.skeletoni.contract.dto.ExampleResponse;
-import turbo.diesel.skeletoni.domain.model.Example;
 
 @RestController
 @RequestMapping("/api/v1/examples")
@@ -24,30 +21,18 @@ import turbo.diesel.skeletoni.domain.model.Example;
 @Tag(name = "Example", description = "Example API")
 public class ExampleController {
 
-  private final ExampleUseCase exampleUseCase;
+  private final ExampleControllerDelegate delegate;
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @Operation(summary = "Create a new example")
   public ExampleResponse createExample(@RequestBody CreateExampleRequest request) {
-    CreateExampleCommand command = new CreateExampleCommand(request.getName());
-    Example example = exampleUseCase.createExample(command);
-    return mapToResponse(example);
+    return delegate.createExample(request);
   }
 
   @GetMapping
   @Operation(summary = "List examples")
   public List<ExampleResponse> listExamples() {
-    return exampleUseCase.listExamples().stream()
-        .map(this::mapToResponse)
-        .toList();
-  }
-
-  private ExampleResponse mapToResponse(Example example) {
-    return ExampleResponse.builder()
-        .id(example.getId().value())
-        .name(example.getName())
-        .createdAt(example.getCreatedAt())
-        .build();
+    return delegate.listExamples();
   }
 }
